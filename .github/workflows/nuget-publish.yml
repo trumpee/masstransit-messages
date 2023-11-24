@@ -41,10 +41,7 @@ jobs:
       - name: Update Version
         run: |
           version_type=${{ steps.determine_version.outputs.version }}
-          dotnet pack ./Trumpee.MassTransit.Messages.sln -c ${{ secrets.BUILD_CONFIGURATION }} -o output /p:VersionSuffix=-${{ github.run_number }}.${{ github.run_id }}.${version_type}
-
-      - name: Build Solution
-        run:  dotnet build ./Trumpee.MassTransit.Messages.sln -c ${{ secrets.BUILD_CONFIGURATION }}
+          dotnet pack ./Trumpee.MassTransit.Messages.csproj -c ${{ secrets.BUILD_CONFIGURATION }} -o output /p:VersionSuffix=-${{ github.run_number }}.${{ github.run_id }}.${version_type}
 
       - name: Commit Version Bump
         run: |
