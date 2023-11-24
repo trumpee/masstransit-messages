@@ -6,10 +6,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
 
   create_nuget:
@@ -36,48 +32,22 @@ jobs:
         run: |
           if [ "$GITHUB_REF" == "refs/heads/main" ]; then
             # For commits to the main branch, update the minor version
-            echo "::set-output name=version::minor"
+            echo "minor"
           else
             # For commits within a PR, update the patch version
-            echo "::set-output name=version::patch"
+            echo "patch"
           fi
 
       - name: Update Version
         run: |
           version_type=${{ steps.determine_version.outputs.version }}
-          dotnet build-version -t $version_type -f ./Trumpee.MassTransit.Messages.csproj
-          
-          # Restore dependencies
-          dotnet restore
-          
-          # Commit the updated version
-          git add **/*.csproj
-          git commit -m "Update version"
-          git push
+          dotnet pack ./Trumpee.MassTransit.Messages.sln -c ${{ secrets.BUILD_CONFIGURATION }} -o output /p:VersionSuffix=-${{ github.run_number }}.${{ github.run_id }}.${version_type}
 
       - name: Build Solution
         run:  dotnet build ./Trumpee.MassTransit.Messages.sln -c ${{ secrets.BUILD_CONFIGURATION }}
 
-      - run: dotnet pack ./Trumpee.MassTransit.Messages.sln -c ${{ secrets.BUILD_CONFIGURATION }} -o output
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: nuget
-          if-no-files-found: error
-          retention-days: 7
-          path: output/*.nupkg
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [ create_nuget ]
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: nuget
-          path: output
-
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
-
-      - name: Publish NuGet to GitHub package registry
-        run: dotnet nuget push Trumpee.MassTransit.Messages.nupkg --api-key "${{ secrets.SECRET_TOKEN }}" --source https://nuget.pkg.github.com/bardin08/index.json --skip-duplicate
+      - name: Commit Version Bump
+        run: |
+          git add **/*.csproj
+          git commit -m "Bump version"
+          git push
