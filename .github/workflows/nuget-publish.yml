@@ -27,17 +27,17 @@ jobs:
 
       - name: Set version
         run: |
-          if [[ $GITHUB_REF == refs/heads/main ]]; then
+          if ($env:GITHUB_REF -eq "refs/heads/main") {
             # For commits to the main branch, update the minor version
             dotnet bump minor
-          else
+          } else {
             # For commits within a PR, update the patch version
             dotnet bump patch
-          fi
-
+          }
+          
           # Restore dependencies
           dotnet restore
-
+          
           # Commit the updated version
           git add **/*.csproj
           git commit -m "Update version"
