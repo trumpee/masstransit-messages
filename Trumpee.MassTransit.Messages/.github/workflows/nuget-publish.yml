@@ -1,8 +1,10 @@
 ﻿name: publish-packages
 on:
+  push:
+    branches:
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
-
 
 defaults:
   run:
@@ -22,6 +24,24 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ secrets.DOTNET_VERSION }}
+
+      - name: Set version
+        run: |
+          if [[ $GITHUB_REF == refs/heads/main ]]; then
+            # For commits to the main branch, update the minor version
+            dotnet bump minor
+          else
+            # For commits within a PR, update the patch version
+            dotnet bump patch
+          fi
+
+          # Restore dependencies
+          dotnet restore
+
+          # Commit the updated version
+          git add **/*.csproj
+          git commit -m "Update version"
+          git push
 
       - name: Build Solution
         run:  dotnet build ./Trumpee.MassTransit.Messages.sln -c ${{ secrets.BUILD_CONFIGURATION }}
