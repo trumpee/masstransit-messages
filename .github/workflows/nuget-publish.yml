@@ -34,10 +34,10 @@ jobs:
         run: |
           if ($env:GITHUB_REF -eq "refs/heads/main") {
             # For commits to the main branch, update the minor version
-            dotnet bump minor
+            dotnet bump minor ./Trumpee.MassTransit.Messages.csproj
           } else {
             # For commits within a PR, update the patch version
-            dotnet bump patch
+            dotnet bump patch ./Trumpee.MassTransit.Messages.csproj
           }
           
           # Restore dependencies
