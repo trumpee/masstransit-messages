@@ -30,9 +30,6 @@ jobs:
           git config --global user.email "vbardin810@gmail.com"
           git config --global user.name "Vladyslav Bardin"
 
-      - name: Install dotnet-bump tool
-        run: dotnet tool install --tool-path ./tools dotnet-bump
-
       - name: Set version
         run: |
           if ($env:GITHUB_REF -eq "refs/heads/main") {
