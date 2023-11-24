@@ -1,7 +1,7 @@
 ﻿name: publish-packages
 on:
-  workflow_dispatch: # Allow running the workflow manually from the GitHub UI
-  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 
 defaults:
