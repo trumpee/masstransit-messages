@@ -8,7 +8,7 @@ on:
 
 defaults:
   run:
-    shell: pwsh
+    shell: bash
 
 jobs:
 
@@ -34,7 +34,7 @@ jobs:
       - name: Determine Version
         id: determine_version
         run: |
-          if [[ $GITHUB_REF == refs/heads/main ]]; then
+          if [ "$GITHUB_REF" == "refs/heads/main" ]; then
             # For commits to the main branch, update the minor version
             echo "::set-output name=version::minor"
           else
