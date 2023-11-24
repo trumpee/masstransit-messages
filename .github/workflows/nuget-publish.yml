@@ -25,6 +25,11 @@ jobs:
         with:
           dotnet-version: ${{ secrets.DOTNET_VERSION }}
 
+      - name: Set Git Identity
+        run: |
+          git config --global user.email "vbardin810@gmail.com"
+          git config --global user.name "Vladyslav Bardin"
+
       - name: Set version
         run: |
           if ($env:GITHUB_REF -eq "refs/heads/main") {
