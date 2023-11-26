@@ -37,7 +37,7 @@ jobs:
       - name: Update Version
         run: |
           version_type=${{ steps.determine_version.outputs.version }}
-          /path/to/dotnet-bump $version_type ./YourProject.csproj  # Replace with the full path
-          git add ./YourProject.csproj  # Replace with your project file name
+          $GITHUB_WORKSPACE/.dotnet/tools/dotnet-bump/.dotnet/tools/dotnet-bump $version_type ./Trumpee.MassTransit.Messages.csproj
+          git add ./Trumpee.MassTransit.Messages.csproj
           git commit -m "Bump $version_type version"
           git push
