@@ -1,4 +1,5 @@
-﻿name: publish-packages
+﻿name: Bump Patch Version on PR Commit
+
 on:
   push:
     branches:
@@ -7,44 +8,33 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-
-  create_nuget:
+  bump_version:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.SECRET_TOKEN }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: ${{ secrets.DOTNET_VERSION }}
+          dotnet-version: 8.0
 
-      - name: Set Git Identity
-        run: |
-          git config --global user.email "vbardin810@gmail.com"
-          git config --global user.name "Vladyslav Bardin"
+      - name: Install dotnet-bump
+        run: dotnet tool install --global dotnet-bump
 
       - name: Determine Version
         id: determine_version
         run: |
-          if [ "$GITHUB_REF" == "refs/heads/main" ]; then
-            # For commits to the main branch, update the minor version
+          if [[ $GITHUB_REF == refs/heads/main ]]; then
             echo "minor"
           else
-            # For commits within a PR, update the patch version
             echo "patch"
           fi
 
       - name: Update Version
         run: |
           version_type=${{ steps.determine_version.outputs.version }}
-          dotnet pack ./Trumpee.MassTransit.Messages.csproj -c ${{ secrets.BUILD_CONFIGURATION }} -o output /p:VersionSuffix=-${{ github.run_number }}.${{ github.run_id }}.${version_type}
-
-      - name: Commit Version Bump
-        run: |
-          git add **/*.csproj
-          git commit -m "Bump version"
+          dotnet bump $version_type ./Trumpee.MassTransit.Messages.csproj
+          git add ./YourProject.csproj  # Replace with your project file name
+          git commit -m "Bump $version_type version"
           git push
