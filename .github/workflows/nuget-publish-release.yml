@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches-ignore:
+    branches:
       - main
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
         id: bump_version
         uses: SiqiLu/dotnet-bump-version@master
         with:
-          version_mask: 0.0.0.1
+          version_mask: 0.0.1.0
           version_overwrite: "*.*.*.*"
           version_files: "**/*.csproj"
           github_token: ${{ secrets.SECRET_TOKEN }}
