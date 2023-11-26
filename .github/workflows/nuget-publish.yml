@@ -54,6 +54,6 @@ jobs:
 
       - name: Publish NuGet to GitHub package registry
         run: |
-          foreach($file in (Get-ChildItem "nuget" -Recurse -Include **/*.nupkg)) {
-            dotnet nuget push $file --api-key "${{ secrets.SECRET_TOKEN }}" --source https://nuget.pkg.github.com/trumpee/index.json --skip-duplicate
-          }
+          for file in $(find nuget -type f -name "*.nupkg"); do
+            dotnet nuget push "$file" --api-key "${{ secrets.SECRET_TOKEN }}" --source https://nuget.pkg.github.com/trumpee/index.json --skip-duplicate
+          done
