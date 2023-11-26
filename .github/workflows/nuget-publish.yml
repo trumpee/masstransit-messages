@@ -1,8 +1,9 @@
 ﻿name: Bump Patch Version on PR Commit
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  push:
+    branches-ignore:
+      - main
 
 jobs:
   bump_version:
