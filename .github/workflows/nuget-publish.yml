@@ -27,4 +27,4 @@ jobs:
           version_mask: 0.0.0.1
           version_overwrite: "*.*.*.*"
           version_file: "./Trumpee.MassTransit.Messages.csproj"
-          github_token: ${{ secrets.SECRET_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
