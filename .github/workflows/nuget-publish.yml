@@ -26,7 +26,7 @@ jobs:
         with:
           version_mask: 0.0.0.1
           version_overwrite: "*.*.*.*"
-          version_files: "./Trumpee.MassTransit.Messages.csproj"
+          version_files: "**/*.csproj"
           github_token: ${{ secrets.SECRET_TOKEN }}
 
   deploy:
@@ -44,13 +44,13 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Build Solution
-        run:  dotnet build Trumpee.MassTransit.Messages.sln -c Release
+        run:  dotnet build ./Trumpee.MassTransit.Messages/Trumpee.MassTransit.Messages.sln -c Release
 
       - name: Run Tests
-        run: dotnet test --no-build -c Release --verbosity normal Trumpee.MassTransit.Messages.sln
+        run: dotnet test --no-build -c Release --verbosity normal ./Trumpee.MassTransit.Messages/Trumpee.MassTransit.Messages.sln
 
       - name: Create NuGet Package
-        run: dotnet pack "./Trumpee.MassTransit.Messages.csproj" -c Release -o nuget
+        run: dotnet pack ./Trumpee.MassTransit.Messages/Trumpee.MassTransit.Messages.csproj -c Release -o nuget
 
       - name: Publish NuGet to GitHub package registry
         run: |
