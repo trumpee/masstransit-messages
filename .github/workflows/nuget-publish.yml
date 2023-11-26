@@ -20,7 +20,10 @@ jobs:
           dotnet-version: 8.*
 
       - name: Install dotnet-bump
-        run: dotnet tool install --global dotnet-bump
+        run: dotnet tool install --global dotnet-bump --version 1.0.1  # Replace with your desired version
+
+      - name: Add dotnet tools to PATH
+        run: echo "::add-path::$HOME/.dotnet/tools"
 
       - name: Determine Version
         id: determine_version
