@@ -1,9 +1,6 @@
 ﻿name: Bump Patch Version on PR Commit
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -12,32 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
 
-      - name: Install dotnet-bump
-        run: dotnet tool install --global dotnet-bump --version 1.0.1  # Replace with your desired version
-
-      - name: Add dotnet tools to PATH
-        run: echo "::add-path::$HOME/.dotnet/tools"
-
-      - name: Determine Version
-        id: determine_version
-        run: |
-          if [[ $GITHUB_REF == refs/heads/main ]]; then
-            echo "minor"
-          else
-            echo "patch"
-          fi
-
-      - name: Update Version
-        run: |
-          version_type=${{ steps.determine_version.outputs.version }}
-          $GITHUB_WORKSPACE/.dotnet/tools/dotnet-bump/.dotnet/tools/dotnet-bump $version_type ./Trumpee.MassTransit.Messages.csproj
-          git add ./Trumpee.MassTransit.Messages.csproj
-          git commit -m "Bump $version_type version"
-          git push
+      - name: Bump Version
+        id: bump_version
+        uses: SiqiLu/dotnet-bump-version@master
+        with:
+          version_mask: 0.0.0.1
+          version_overwrite: "*.*.*.*"
+          version_file: "./Trumpee.MassTransit.Messages.csproj"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
