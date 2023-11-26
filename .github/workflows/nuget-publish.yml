@@ -30,7 +30,7 @@ jobs:
           github_token: ${{ secrets.SECRET_TOKEN }}
 
       - name: Create NuGet Package
-        run: dotnet pack ./Trumpee.MassTransit.Messages.sln -c Release -o ${{ env.NUGET_DIRECTORY }}
+        run: dotnet pack ./Trumpee.MassTransit.Messages.sln -c Release -o nuget
 
       - name: Cache NuGet Package
         uses: actions/upload-artifact@v3
@@ -38,7 +38,7 @@ jobs:
           name: nuget
           if-no-files-found: error
           retention-days: 1
-          path: ${{ env.NUGET_DIRECTORY }}/*.nupkg
+          path: nuget/*.nupkg
     
   deploy:
     runs-on: ubuntu-latest
@@ -47,7 +47,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: nuget
-          path: ${{ env.NUGET_DIRECTORY }}
+          path: nuget
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
