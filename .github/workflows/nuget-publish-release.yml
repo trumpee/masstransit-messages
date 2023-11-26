@@ -1,0 +1,59 @@
+﻿name: Deploy NuGet package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump_version:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Bump Version
+        id: bump_version
+        uses: SiqiLu/dotnet-bump-version@master
+        with:
+          version_mask: 0.0.1.0
+          version_overwrite: "*.*.*.*"
+          version_files: "**/*.csproj"
+          github_token: ${{ secrets.SECRET_TOKEN }}
+
+  deploy:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    needs: [ bump_version ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build Solution
+        run:  dotnet build ./Trumpee.MassTransit.Messages/Trumpee.MassTransit.Messages.sln -c Release
+
+      - name: Run Tests
+        run: dotnet test --no-build -c Release --verbosity normal ./Trumpee.MassTransit.Messages/Trumpee.MassTransit.Messages.sln
+
+      - name: Create NuGet Package
+        run: dotnet pack ./Trumpee.MassTransit.Messages/Trumpee.MassTransit.Messages.csproj -c Release -o nuget
+
+      - name: Publish NuGet to GitHub package registry
+        run: |
+          for file in $(find nuget -type f -name "*.nupkg"); do
+            dotnet nuget push "$file" --api-key "${{ secrets.SECRET_TOKEN }}" --source https://nuget.pkg.github.com/trumpee/index.json --skip-duplicate
+          done
