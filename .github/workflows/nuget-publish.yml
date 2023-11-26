@@ -17,7 +17,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 8.*
+          dotnet-version: 8.0.x
 
       - name: Install dotnet-bump
         run: dotnet tool install --global dotnet-bump --version 1.0.1  # Replace with your desired version
@@ -37,7 +37,7 @@ jobs:
       - name: Update Version
         run: |
           version_type=${{ steps.determine_version.outputs.version }}
-          dotnet bump $version_type ./Trumpee.MassTransit.Messages.csproj
+          /path/to/dotnet-bump $version_type ./YourProject.csproj  # Replace with the full path
           git add ./YourProject.csproj  # Replace with your project file name
           git commit -m "Bump $version_type version"
           git push
