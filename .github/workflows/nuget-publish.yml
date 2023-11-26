@@ -30,7 +30,7 @@ jobs:
           github_token: ${{ secrets.SECRET_TOKEN }}
 
       - name: Create NuGet Package
-        run: dotnet pack ./Trumpee.MassTransit.Messages.sln --c Release -o ${{ env.NUGET_DIRECTORY }}
+        run: dotnet pack ./Trumpee.MassTransit.Messages.sln -c Release -o ${{ env.NUGET_DIRECTORY }}
 
       - name: Cache NuGet Package
         uses: actions/upload-artifact@v3
