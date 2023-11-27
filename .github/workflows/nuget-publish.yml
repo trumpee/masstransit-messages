@@ -47,10 +47,10 @@ jobs:
         run:  dotnet build ./Trumpee.MassTransit.Messages/Trumpee.MassTransit.Messages.sln -c Release
 
       - name: Run Tests
-        run: dotnet test --no-build -c Release --verbosity normal ./Trumpee.MassTransit.Messages/Trumpee.MassTransit.Messages.sln
+        run: dotnet test --no-build -c Release -v normal ./Trumpee.MassTransit.Messages/Trumpee.MassTransit.Messages.sln
 
       - name: Create NuGet Package
-        run: dotnet pack ./Trumpee.MassTransit.Messages/Trumpee.MassTransit.Messages.csproj -c Release -o nuget
+        run: dotnet pack -c Release -o nuget ./Trumpee.MassTransit.Messages/Trumpee.MassTransit.Messages.csproj
 
       - name: Publish NuGet to GitHub package registry
         run: |
