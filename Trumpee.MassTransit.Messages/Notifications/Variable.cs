@@ -1,6 +1,6 @@
 ﻿namespace Trumpee.MassTransit.Messages.Notifications;
 
-public class Variable
+public record Variable
 {
     public required string Name { get; init; }
     public string? Description { get; init; }

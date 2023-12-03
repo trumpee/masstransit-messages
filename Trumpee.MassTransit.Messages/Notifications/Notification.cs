@@ -1,12 +1,10 @@
 ﻿namespace Trumpee.MassTransit.Messages.Notifications;
 
-public class Notification
+public record Notification
 {
-    public Content? Content { get; set; }
-    public Priority? Priority { get; set; }
-    public string? Status { get; set; }
-    public DateTimeOffset? Timestamp { get; set; }
-
-    public string? UserId { get; set; }
-    public string? Channel { get; set; }
+    public Content? Content { get; init; }
+    public Priority? Priority { get; init; }
+    public string? Status { get; init; }
+    public DateTimeOffset? Timestamp { get; init; }
+    public Recipient Recipient { get; init; } = null!;
 }
