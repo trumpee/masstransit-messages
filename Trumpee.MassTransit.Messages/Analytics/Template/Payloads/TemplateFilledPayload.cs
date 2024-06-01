@@ -3,15 +3,15 @@
 /// <summary>
 /// Represents the payload for a template filled event.
 /// </summary>
-public class TemplateFilledPayload
+public record TemplateFilledPayload
 {
     /// <summary>
     /// Gets or sets the ID of the template.
     /// </summary>
-    public required string TemplateId { get; set; }
+    public required string TemplateId { get; init; }
 
     /// <summary>
     /// Gets or sets the ID of the notification.
     /// </summary>
-    public required string NotificationId { get; set; }
+    public required string NotificationId { get; init; }
 }

@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents the payload for a user sign-in event.
 /// </summary>
-public class UserSignInPayload
+public record UserSignInPayload
 {
     /// <summary>
     /// Gets or sets the email of the user.

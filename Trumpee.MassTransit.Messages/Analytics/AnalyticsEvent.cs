@@ -1,20 +1,20 @@
 ﻿namespace Trumpee.MassTransit.Messages.Analytics;
 
-public class AnalyticsEvent<TBody>
+public record AnalyticsEvent<TBody>
 {
     private AnalyticsEvent()
     {
     }
 
-    public TBody? Payload { get; set; }
+    public TBody? Payload { get; init; }
 
-    public required string StreamId { get; set; }
-    public required string Id { get; set; }
-    public required string Action { get; set; }
-    public required string Version { get; set; }
-    public required string Source { get; set; }
-    public DateTimeOffset Timestamp { get; set; }
-    public Dictionary<string, string>? Metadata { get; set; }
+    public required string StreamId { get; init; }
+    public required string Id { get; init; }
+    public required string Action { get; init; }
+    public required string Version { get; init; }
+    public required string Source { get; init; }
+    public DateTimeOffset Timestamp { get; init; }
+    public Dictionary<string, string>? Metadata { get; init; }
 
     internal static AnalyticsEvent<T> Create<T>(
         string streamId, string action, string source, T? payload,
