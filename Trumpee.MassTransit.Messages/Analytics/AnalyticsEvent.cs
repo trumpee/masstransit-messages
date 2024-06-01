@@ -1,8 +1,8 @@
-﻿namespace Trumpee.MassTransit.Messages;
+﻿namespace Trumpee.MassTransit.Messages.Analytics;
 
-public class Event<TBody>
+public class AnalyticsEvent<TBody>
 {
-    private Event()
+    private AnalyticsEvent()
     {
     }
 
@@ -16,7 +16,7 @@ public class Event<TBody>
     public DateTimeOffset Timestamp { get; set; }
     public Dictionary<string, string>? Metadata { get; set; }
 
-    internal static Event<T> Create<T>(
+    internal static AnalyticsEvent<T> Create<T>(
         string streamId, string action, string source, T? payload,
         Dictionary<string, string>? metadata = null)
     {
@@ -24,18 +24,15 @@ public class Event<TBody>
         ArgumentException.ThrowIfNullOrEmpty(action);
         ArgumentException.ThrowIfNullOrEmpty(source);
 
-        var version = "v0";
-        if (metadata != null &&
-            metadata.TryGetValue("version", out var ver))
-        {
-            version = ver;
-        }
+        metadata ??= AnalyticsMetadataBuilder.Default;
 
-        return new Event<T>
+        var version = metadata[AnalyticsMetadataKeys.EventVersion];
+
+        return new AnalyticsEvent<T>
         {
-            Version = version,
-            StreamId = streamId,
             Id = Guid.NewGuid().ToString("N"),
+            StreamId = streamId,
+            Version = version,
             Action = action,
             Source = source,
             Metadata = metadata,
