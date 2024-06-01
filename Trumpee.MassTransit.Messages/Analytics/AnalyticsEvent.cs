@@ -2,10 +2,6 @@
 
 public record AnalyticsEvent<TBody>
 {
-    private AnalyticsEvent()
-    {
-    }
-
     public TBody? Payload { get; init; }
 
     public required string StreamId { get; init; }
